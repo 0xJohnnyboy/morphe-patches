@@ -8,6 +8,7 @@ The **Replace Google Photos with Immich** switch is at the end of **Settings →
 
 ## Compatibility
 
+- Morphe Manager `2.6.0` or later (bundle built with Morphe Patcher `2.4.0` stable).
 - Target build: Pixel Camera `11.1.040.982810059.19` (version code `69703284`).
 - The Immich patch keeps Pixel Camera’s name and package ID (`com.google.android.GoogleCamera`). It adds a package-visibility entry for Immich so Android can find its viewer.
 - Tested in a cloned build on a Pixel 10 Pro with Immich 3.4.2.
@@ -39,7 +40,7 @@ Use JDK 21. Gradle resolves Morphe dependencies from GitHub Packages. Set `GITHU
 ./gradlew :patches:build
 ```
 
-The build produces `patches/build/libs/patches-0.1.2.mpp`.
+The build produces `patches/build/libs/patches-0.1.3.mpp`.
 
 ## Credits
 
