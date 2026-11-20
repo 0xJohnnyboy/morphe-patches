@@ -1,10 +1,10 @@
 group = "app.morphe.patches.pixelcamera.gallery"
-version = "0.1.4"
+version = "0.1.5"
 
 patches {
     about {
         name = "Johnnyboy’s Morphe Patches"
-        description = "Adds a setting to open the Pixel Camera thumbnail in Immich."
+        description = "Open Pixel Camera previews in Immich and browse Apple Music artist albums in Android Auto."
         source = "https://github.com/0xJohnnyboy/morphe-patches"
         author = "0xJohnnyboy"
         contact = "na"
