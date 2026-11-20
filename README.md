@@ -1,6 +1,8 @@
-# Pixel Camera
+# Johnnyboy’s Morphe Patches
 
-[![Add to Morphe](https://img.shields.io/badge/Add%20to-Morphe%20Manager-4285f4?logo=android)](https://morphe.software/add-source?github=0xJohnnyboy/Pixel-Camera)
+[![Add to Morphe](https://img.shields.io/badge/Add%20to-Morphe%20Manager-4285f4?logo=android)](https://morphe.software/add-source?github=0xJohnnyboy/morphe-patches)
+
+## Pixel Camera
 
 Open the last photo from the Pixel Camera thumbnail in [Immich](https://github.com/immich-app/immich).
 
@@ -15,7 +17,7 @@ The **Replace Google Photos with Immich** switch is at the end of **Settings →
 
 ## Use with Morphe
 
-1. On your phone, tap [**Add to Morphe**](https://morphe.software/add-source?github=0xJohnnyboy/Pixel-Camera) and confirm the source in [Morphe Manager](https://github.com/MorpheApp/morphe-manager).
+1. On your phone, tap [**Add to Morphe**](https://morphe.software/add-source?github=0xJohnnyboy/morphe-patches) and confirm the source in [Morphe Manager](https://github.com/MorpheApp/morphe-manager).
 2. In Morphe, enable **Expert mode**, select **Pixel Camera**, and choose an original APK or APKM for version `11.1.040.982810059.19`.
 3. Enable **Replace Google Photos with Immich**. If you want to install it alongside the Google-signed Pixel Camera, also enable the clone patch described below.
 4. Apply the selected patches and install the resulting app. In Pixel Camera, open **Settings → General** and turn on **Replace Google Photos with Immich**.

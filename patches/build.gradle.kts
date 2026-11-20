@@ -3,12 +3,12 @@ version = "0.1.4"
 
 patches {
     about {
-        name = "Pixel Camera – Immich"
+        name = "Johnnyboy’s Morphe Patches"
         description = "Adds a setting to open the Pixel Camera thumbnail in Immich."
-        source = "https://github.com/0xJohnnyboy/Pixel-Camera"
+        source = "https://github.com/0xJohnnyboy/morphe-patches"
         author = "0xJohnnyboy"
         contact = "na"
-        website = "https://github.com/0xJohnnyboy/Pixel-Camera"
+        website = "https://github.com/0xJohnnyboy/morphe-patches"
         license = "GPLv3"
     }
 }
