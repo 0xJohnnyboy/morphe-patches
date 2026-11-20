@@ -39,7 +39,7 @@ Use JDK 21. Gradle resolves Morphe dependencies from GitHub Packages. Set `GITHU
 ./gradlew :patches:build
 ```
 
-The build produces `patches/build/libs/patches-0.1.1.mpp`.
+The build produces `patches/build/libs/patches-0.1.2.mpp`.
 
 ## Credits
 

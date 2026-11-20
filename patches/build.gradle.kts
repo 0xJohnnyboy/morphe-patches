@@ -1,9 +1,9 @@
 group = "app.morphe.patches.pixelcamera.gallery"
-version = "0.1.1"
+version = "0.1.2"
 
 patches {
     about {
-        name = "Pixel Camera Gallery Target"
+        name = "Pixel Camera – Immich"
         description = "Adds a setting to open the Pixel Camera thumbnail in Immich."
         source = "https://github.com/0xJohnnyboy/Pixel-Camera"
         author = "0xJohnnyboy"
