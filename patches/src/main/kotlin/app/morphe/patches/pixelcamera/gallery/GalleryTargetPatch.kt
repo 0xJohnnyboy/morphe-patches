@@ -7,6 +7,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21t
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
@@ -52,8 +53,17 @@ internal val galleryTargetPatch = bytecodePatch {
         }
         val implementation = checkNotNull(review.implementation)
         check(implementation.registerCount == 9)
-        val context = (implementation.instructions.first() as ReferenceInstruction).reference as FieldReference
-        check(context.type == "Landroid/content/Context;")
+        // Other bundles may insert intent preparation before Camera's context read.
+        val context = reviewClass.fields.single { it.type == "Landroid/content/Context;" }
+        val contextRead = implementation.instructions.indexOfFirst { instruction ->
+            instruction.opcode == Opcode.IGET_OBJECT &&
+                (instruction as? TwoRegisterInstruction)?.let {
+                    it.registerA == 0 && it.registerB == implementation.registerCount - reviewParameters.size - 1
+                } == true &&
+                (instruction as? ReferenceInstruction)?.reference == context
+        }
+        check(contextRead >= 0) { "Could not find the thumbnail review context read" }
+        val redirectIndex = contextRead + 1
         val activity = implementation.instructions.mapNotNull {
             (it as? ReferenceInstruction)?.reference as? FieldReference
         }.first { it.definingClass == reviewClass.type && it.type == "Landroid/app/Activity;" }
@@ -67,17 +77,12 @@ internal val galleryTargetPatch = bytecodePatch {
         // Reuse the resolved media URI and its read grant, while keeping secure review in Camera.
         val redirect = """
             ${enabledAndUnlocked("immich_continue")}
+            if-eqz p1, :immich_continue
             const-string v1, "com.google.android.apps.photos.api.secure_mode"
             const/4 v2, 0x0
             invoke-virtual {p1, v1, v2}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
             move-result v1
             if-nez v1, :immich_continue
-            invoke-virtual {p1}, Landroid/content/Intent;->getPackage()Ljava/lang/String;
-            move-result-object v1
-            const-string v2, "com.google.android.apps.photos"
-            invoke-virtual {v2, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-            move-result v1
-            if-eqz v1, :immich_continue
             invoke-virtual {p1}, Landroid/content/Intent;->getData()Landroid/net/Uri;
             move-result-object v1
             if-eqz v1, :immich_continue
@@ -85,6 +90,8 @@ internal val galleryTargetPatch = bytecodePatch {
             invoke-direct {v1, p1}, Landroid/content/Intent;-><init>(Landroid/content/Intent;)V
             const-string v2, "android.intent.action.VIEW"
             invoke-virtual {v1, v2}, Landroid/content/Intent;->setAction(Ljava/lang/String;)Landroid/content/Intent;
+            const/4 v2, 0x0
+            invoke-virtual {v1, v2}, Landroid/content/Intent;->setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;
             const-string v2, "$immichPackage"
             invoke-virtual {v1, v2}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
             invoke-virtual {v0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
@@ -115,18 +122,18 @@ internal val galleryTargetPatch = bytecodePatch {
         check(start >= 0)
         val catchIndex = redirect.indexOfFirst { it.opcode == Opcode.MOVE_EXCEPTION }
         check(catchIndex > start)
-        redirect.forEachIndexed { index, instruction -> implementation.addInstruction(1 + index, instruction) }
-        val originalReview = implementation.newLabelForIndex(1 + redirect.size)
+        redirect.forEachIndexed { index, instruction -> implementation.addInstruction(redirectIndex + index, instruction) }
+        val originalReview = implementation.newLabelForIndex(redirectIndex + redirect.size)
         redirect.forEachIndexed { index, instruction ->
             if (instruction.opcode == Opcode.IF_EQZ || instruction.opcode == Opcode.IF_NEZ) {
-                implementation.replaceInstruction(1 + index, BuilderInstruction21t(
+                implementation.replaceInstruction(redirectIndex + index, BuilderInstruction21t(
                     instruction.opcode, (instruction as OneRegisterInstruction).registerA, originalReview
                 ))
             }
         }
-        val tryStart = implementation.newLabelForIndex(1 + start)
-        val tryEnd = implementation.newLabelForIndex(2 + start)
-        val handler = implementation.newLabelForIndex(1 + catchIndex)
+        val tryStart = implementation.newLabelForIndex(redirectIndex + start)
+        val tryEnd = implementation.newLabelForIndex(redirectIndex + start + 1)
+        val handler = implementation.newLabelForIndex(redirectIndex + catchIndex)
         implementation.addCatch("Landroid/content/ActivityNotFoundException;", tryStart, tryEnd, handler)
         implementation.addCatch("Ljava/lang/SecurityException;", tryStart, tryEnd, handler)
 
