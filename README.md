@@ -34,6 +34,12 @@ On the Pixel 10 Pro used for testing, photos failed to save with only the clone 
 
 To reproduce the tested setup in Morphe Manager, enable [Expert mode](https://github.com/MorpheApp/morphe-manager/blob/main/docs/patching-expert-mode.md), add both sources, and select **Replace Google Photos with Immich**, **Pixel 10 Photo Saving Fix**, and **Pixel Camera Clone (Non-Root)**. The tested upstream bundle version was `1.1.3`.
 
+## Apple Music
+
+**Browse artist albums in Android Auto** opens the artist’s library albums from **Library → Artists**. Open an album to see its tracks in a list. Select **Play album** to play the album or tap a track to start there. The album action is localized in English and French.
+
+In Morphe Manager, add this source, choose **Apple Music** and an original APK or APKM for version `7.0.1` (version code `1622`), then apply **Browse artist albums in Android Auto**. The patch was tested on Android 17 with the Android Auto Desktop Head Unit.
+
 ## Development
 
 Use JDK 21. Gradle resolves Morphe dependencies from GitHub Packages. Set `GITHUB_ACTOR` and `GITHUB_TOKEN`, or configure `gpr.user` and `gpr.key` in your user-level Gradle properties.
@@ -42,7 +48,7 @@ Use JDK 21. Gradle resolves Morphe dependencies from GitHub Packages. Set `GITHU
 ./gradlew :patches:build
 ```
 
-The build produces `patches/build/libs/patches-0.1.4.mpp`.
+The build produces `patches/build/libs/patches-0.1.5.mpp`.
 
 ## Credits
 
