@@ -1,7 +1,5 @@
 package app.morphe.patches.pixelcamera.gallery
 
-import app.morphe.patcher.patch.AppTarget
-import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.smali.toInstructions
 import com.android.tools.smali.dexlib2.Opcode
@@ -33,19 +31,8 @@ private fun enabledAndUnlocked(fallback: String) = """
     if-nez v1, :$fallback
 """.trimIndent()
 
-val galleryTargetPatch = bytecodePatch(
-    name = "Pixel Camera Gallery Target",
-    description = "Routes thumbnail review to Immich when the setting is enabled.",
-    default = false
-) {
-    compatibleWith(
-        Compatibility(
-            packageName = "com.google.android.GoogleCamera",
-            name = "Pixel Camera",
-            targets = listOf(AppTarget("11.1.040.982810059.19", 69703284, false, 37))
-        )
-    )
-
+// Internal dependency of the user-selectable Immich patch.
+internal val galleryTargetPatch = bytecodePatch {
     execute {
         val reviewParameters = listOf(
             "Landroid/content/Intent;", "Landroid/view/View;", "Landroid/graphics/Bitmap;"

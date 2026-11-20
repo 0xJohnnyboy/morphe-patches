@@ -10,8 +10,8 @@ private const val toggleTitle = "pref_camera_replace_google_photos_with_immich_t
 private const val toggleSummary = "pref_camera_replace_google_photos_with_immich_summary"
 
 val galleryTargetResources = resourcePatch(
-    name = "Pixel Camera Gallery Target Settings",
-    description = "Adds a localized switch to replace Google Photos with Immich.",
+    name = "Replace Google Photos with Immich",
+    description = "Adds a setting to open the Pixel Camera thumbnail in Immich.",
     default = true
 ) {
     compatibleWith(

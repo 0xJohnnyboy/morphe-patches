@@ -16,7 +16,7 @@ The **Replace Google Photos with Immich** switch is at the end of **Settings →
 
 1. On your phone, tap [**Add to Morphe**](https://morphe.software/add-source?github=0xJohnnyboy/Pixel-Camera) and confirm the source in [Morphe Manager](https://github.com/MorpheApp/morphe-manager).
 2. In Morphe, enable **Expert mode**, select **Pixel Camera**, and choose an original APK or APKM for version `11.1.040.982810059.19`.
-3. Enable **Pixel Camera Gallery Target Settings**. If you want to install it alongside the Google-signed Pixel Camera, also enable the clone patch described below.
+3. Enable **Replace Google Photos with Immich**. If you want to install it alongside the Google-signed Pixel Camera, also enable the clone patch described below.
 4. Apply the selected patches and install the resulting app. In Pixel Camera, open **Settings → General** and turn on **Replace Google Photos with Immich**.
 
 ### Pixel 10 photo saving and optional cloning
@@ -29,7 +29,7 @@ On the Pixel 10 Pro used for testing, photos failed to save with only the clone 
 
 **Pixel Camera Clone (Non-Root)** is another optional patch from the upstream source. It changes the package to `com.google.android.GoogleCamera.morphe` so the patched APK can be installed alongside the Google-signed app. Enable it only for a side-by-side install.
 
-To reproduce the tested setup in Morphe Manager, enable [Expert mode](https://github.com/MorpheApp/morphe-manager/blob/main/docs/patching-expert-mode.md), add both sources, and select **Pixel Camera Gallery Target Settings**, **Pixel 10 Photo Saving Fix**, and **Pixel Camera Clone (Non-Root)**. The tested upstream bundle version was `1.1.3`.
+To reproduce the tested setup in Morphe Manager, enable [Expert mode](https://github.com/MorpheApp/morphe-manager/blob/main/docs/patching-expert-mode.md), add both sources, and select **Replace Google Photos with Immich**, **Pixel 10 Photo Saving Fix**, and **Pixel Camera Clone (Non-Root)**. The tested upstream bundle version was `1.1.3`.
 
 ## Development
 
@@ -39,7 +39,7 @@ Use JDK 21. Gradle resolves Morphe dependencies from GitHub Packages. Set `GITHU
 ./gradlew :patches:build
 ```
 
-The build produces `patches/build/libs/patches-0.1.0.mpp`.
+The build produces `patches/build/libs/patches-0.1.1.mpp`.
 
 ## Credits
 

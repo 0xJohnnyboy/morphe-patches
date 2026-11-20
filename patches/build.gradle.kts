@@ -1,5 +1,5 @@
 group = "app.morphe.patches.pixelcamera.gallery"
-version = "0.1.0"
+version = "0.1.1"
 
 patches {
     about {
