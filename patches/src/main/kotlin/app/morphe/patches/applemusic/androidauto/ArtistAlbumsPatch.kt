@@ -15,6 +15,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
 private const val mediaLibrary = "Lcom/apple/android/medialibrary/library/MediaLibrary;"
+private const val mediaPlaybackService = "Lcom/apple/android/music/player/MediaPlaybackService;"
 private const val artistAlbumsQuery = "$mediaLibrary->t(LM6/d;LN6/g;)Lzh/m;"
 private const val albumSongsQuery = "$mediaLibrary->d(LM6/d;LN6/g;)Lzh/m;"
 private const val booleanValueOf = "Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;"
@@ -74,7 +75,10 @@ val artistAlbumsPatch = bytecodePatch(
     compatibleWith(Compatibility(
         packageName = "com.apple.android.music",
         name = "Apple Music",
-        targets = listOf(AppTarget("7.0.1", 1622, false, 30))
+        targets = listOf(
+            AppTarget("7.0.1", 1622, false, 30),
+            AppTarget("7.0.2", 1624, false, 30)
+        )
     ))
     dependsOn(albumPlaybackResources)
 
@@ -86,6 +90,19 @@ val artistAlbumsPatch = bytecodePatch(
                     method.implementation?.instructions?.any { it.calls(artistAlbumsQuery) } == true
             }
         })
+
+        val serviceField = provider.fields.single { it.type == mediaPlaybackService }
+        val builderField = provider.fields.single {
+            it.accessFlags and 0x8 == 0 && it.type != mediaPlaybackService
+        }
+        val builderType = builderField.type
+        val buttonBuilder = classDefBy { it.type == builderType }.methods.single { method ->
+            method.name == "f" &&
+                method.parameterTypes == listOf(
+                    builderType, "Ljava/util/List;", "Ljava/lang/String;", "Ljava/lang/String;",
+                    "Ljava/lang/Integer;", "I"
+                ) && method.returnType == "Lz3/w;"
+        }
 
         val mediaItems = provider.methods.single { method ->
             method.returnType == "Ljava/io/Serializable;" &&
@@ -174,7 +191,7 @@ val artistAlbumsPatch = bytecodePatch(
                 ${albumLibraryPath("v3", "v2", "v5", "rows_ready")}
                 move-object v8, v4
                 move-object v1, v3
-                iget-object v6, v0, Lb7/A;->a:Lcom/apple/android/music/player/MediaPlaybackService;
+                iget-object v6, v0, ${provider.type}->${serviceField.name}:${serviceField.type}
                 invoke-virtual {v6}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
                 move-result-object v7
                 const-string v3, "$playAlbumLabel"
@@ -188,12 +205,12 @@ val artistAlbumsPatch = bytecodePatch(
                 :label_ready
                 invoke-virtual {v6, v5}, Landroid/content/Context;->getString(I)Ljava/lang/String;
                 move-result-object v3
-                iget-object v0, v0, Lb7/A;->b:Lb7/G;
+                iget-object v0, v0, ${provider.type}->${builderField.name}:${builderField.type}
                 const v5, 0x7f0803b5
                 invoke-static {v5}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
                 move-result-object v4
                 const/4 v5, 0x0
-                invoke-static/range {v0 .. v5}, Lb7/G;->f(Lb7/G;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;I)Lz3/w;
+                invoke-static/range {v0 .. v5}, $buttonBuilder
                 move-result-object v0
                 const/4 v5, 0x0
                 invoke-virtual {v8, v5, v0}, Ljava/util/ArrayList;->add(ILjava/lang/Object;)V

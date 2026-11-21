@@ -2,6 +2,13 @@
 
 [![Add to Morphe](https://img.shields.io/badge/Add%20to-Morphe%20Manager-4285f4?logo=android)](https://morphe.software/add-source?github=0xJohnnyboy/morphe-patches)
 
+This source contains two independent patches:
+
+- **Replace Google Photos with Immich** for Pixel Camera.
+- **Browse artist albums in Android Auto** for Apple Music.
+
+Select only the patch for the app you are patching.
+
 ## Pixel Camera
 
 Open the last photo from the Pixel Camera thumbnail in [Immich](https://github.com/immich-app/immich).
@@ -38,7 +45,12 @@ To reproduce the tested setup in Morphe Manager, enable [Expert mode](https://gi
 
 **Browse artist albums in Android Auto** opens the artist’s library albums from **Library → Artists**. Open an album to see its tracks in a list. Select **Play album** to play the album or tap a track to start there. The album action is localized in English and French.
 
-In Morphe Manager, add this source, choose **Apple Music** and an original APK or APKM for version `7.0.1` (version code `1622`), then apply **Browse artist albums in Android Auto**. The patch was tested on Android 17 with the Android Auto Desktop Head Unit.
+Compatible Apple Music builds:
+
+- `7.0.1` (version code `1622`)
+- `7.0.2` (version code `1624`)
+
+In Morphe Manager, add this source, choose **Apple Music**, select an original APK or APKM matching one of the compatible builds, and apply **Browse artist albums in Android Auto**. The patch was tested with Apple Music `7.0.2` on Android 17 using the Android Auto Desktop Head Unit.
 
 ## Development
 
@@ -48,7 +60,7 @@ Use JDK 21. Gradle resolves Morphe dependencies from GitHub Packages. Set `GITHU
 ./gradlew :patches:build
 ```
 
-The build produces `patches/build/libs/patches-0.1.5.mpp`.
+The build produces the Morphe patch bundle in `patches/build/libs/`.
 
 ## Credits
 
